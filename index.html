@@ -1,0 +1,945 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Answer Wajiha!!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --bg1: #ffe0f0;
+            --bg2: #d946a6;
+            --accent: #ff69b4;
+            --accent-2: #c946d9;
+            --correct: #4caf50;
+            --wrong: #ff5c7c;
+            --text: #2b1338;
+        }
+        html,body{height:100%;margin:0;font-family: 'Comfortaa', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;font-weight:400}
+        body{
+            background: linear-gradient(135deg, #ffe0f0 0%, #ffc4e0 25%, #ff9dd9 50%, #ff85d0 75%, #d946a6 100%);
+            display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;
+            -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+            position: relative;
+            overflow: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(2px 2px at 20px 30px, #ffc4e0, rgba(0,0,0,0)),
+                              radial-gradient(2px 2px at 60px 70px, #ffb6d9, rgba(0,0,0,0)),
+                              radial-gradient(1px 1px at 50px 50px, #ffd7e8, rgba(0,0,0,0)),
+                              radial-gradient(1px 1px at 130px 80px, #ffb6d9, rgba(0,0,0,0)),
+                              radial-gradient(2px 2px at 90px 10px, #ffc4e0, rgba(0,0,0,0)),
+                              radial-gradient(1.5px 1.5px at 200px 150px, #ffb6d9, rgba(0,0,0,0)),
+                              radial-gradient(2px 2px at 300px 200px, #ffc4e0, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: twinkle 3s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .app{
+            width:100%;max-width:780px;background:linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
+            border-radius:20px;padding:20px;
+            backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.12);
+            animation: pulse-glow 3s ease-in-out infinite;
+            position: relative;
+            z-index: 10;
+        }
+        .rainbow-text {
+            background: linear-gradient(90deg, #ff0080, #ff8c00, #40e0d0, #ff0080);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradient-shift 3s linear infinite;
+        }
+        @keyframes gradient-shift {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 10px 30px rgba(123,44,255,0.18), 0 6px 18px rgba(255,107,166,0.08), 0 0 30px rgba(255,107,166,0.1); }
+            50% { box-shadow: 0 10px 40px rgba(123,44,255,0.25), 0 6px 25px rgba(255,107,166,0.15), 0 0 50px rgba(255,107,166,0.2); }
+        }
+        @keyframes sparkle-burst {
+            0% { opacity: 1; transform: translate(0, 0) scale(1); }
+            100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.3); }
+        }
+        @keyframes bounce-in {
+            0% { transform: scale(0) translateY(-50px); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        .reaction-message {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin: 12px 0;
+            min-height: 40px;
+            background: none;
+            text-shadow: 0 3px 12px rgba(0,0,0,0.4), 0 0 20px rgba(255,105,180,0.8);
+            animation: bounce-in 0.5s ease-out;
+            letter-spacing: 0.5px;
+        }
+        .reaction-message.correct {
+            animation: bounce 0.6s ease-in-out;
+            color: #ff1493;
+            text-shadow: 0 3px 12px rgba(0,0,0,0.3), 0 0 25px rgba(255,20,147,0.7), 0 0 40px rgba(255,105,180,0.5);
+        }
+        .reaction-message.wrong {
+            animation: shake 0.4s ease-in-out;
+            color: #ff69b4;
+            text-shadow: 0 3px 12px rgba(0,0,0,0.3), 0 0 25px rgba(255,105,180,0.7), 0 0 40px rgba(255,20,147,0.5);
+        }
+        .name-input {
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-family: 'Comfortaa';
+            font-weight: 500;
+            text-align: center;
+            max-width: 300px;
+            transition: all 0.3s;
+        }
+        .name-input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+        .name-input:focus {
+            outline: none;
+            border-color: rgba(255,255,255,0.6);
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+            color: white;
+        }
+        .leaderboard-table th {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            text-align: left;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+            font-weight: bold;
+        }
+        .leaderboard-table td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .leaderboard-table tr:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        .rank-badge {
+            display: inline-block;
+            min-width: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .player-name-display {
+            font-size: 16px;
+            color: rgba(255,255,255,0.9);
+            margin-top: 8px;
+        }
+        header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+        .title{font-size:48px;letter-spacing:0.6px;text-shadow:0 2px 8px rgba(0,0,0,0.12);flex:1;min-width:200px;color:#ff1493;font-weight:700}
+        .score-badge{background:linear-gradient(90deg, #ffb6d9, #ff69b4);color:#fff;padding:8px 14px;border-radius:999px;font-size:16px;font-weight:600;box-shadow:0 4px 15px rgba(255,105,180,0.4)}
+        .difficulty-badge{background:rgba(255,255,255,0.15);color:white;padding:6px 12px;border-radius:8px;font-size:12px;text-transform:uppercase;letter-spacing:0.5px}
+        .card{background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));padding:18px;border-radius:14px;color:var(--text)}
+        .start-screen{display:flex;flex-direction:column;align-items:center;gap:20px;padding:20px}
+        .start-screen.hidden{display:none}
+        .start-title{font-size:40px;text-align:center;color:#ff1493;font-weight:700;letter-spacing:1px}
+        .start-subtitle{font-size:18px;color:#ff69b4;text-align:center;max-width:400px;font-weight:500;letter-spacing:0.3px}
+        .difficulty-buttons{display:grid;grid-template-columns:1fr;gap:12px;width:100%;max-width:300px}
+        @media(min-width:480px){.difficulty-buttons{grid-template-columns:1fr 1fr 1fr}}
+        .btn-difficulty{padding:16px;border-radius:12px;border:0;font-size:16px;cursor:pointer;font-family:'Comfortaa';font-weight:700;transition:all 0.2s;text-transform:uppercase;letter-spacing:1px;position:relative;overflow:hidden}
+        .btn-difficulty::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);animation:shimmer 2s infinite}
+        .btn-difficulty.easy{background:linear-gradient(135deg, #6bcf7f, #52b788);color:white;box-shadow:0 4px 15px rgba(107,207,127,0.3)}
+        .btn-difficulty.easy:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(107,207,127,0.4)}
+        .btn-difficulty.medium{background:linear-gradient(135deg, #ffa500, #ffb84d);color:white;box-shadow:0 4px 15px rgba(255,165,0,0.3)}
+        .btn-difficulty.medium:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,165,0,0.4)}
+        .btn-difficulty.hard{background:linear-gradient(135deg, #ff6b6b, #ff5252);color:white;box-shadow:0 4px 15px rgba(255,107,107,0.3)}
+        .btn-difficulty.hard:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,107,107,0.4)}
+        .question{font-size:22px;margin:4px 0 12px;color:#ff69b4;font-weight:600;letter-spacing:0.3px}
+        .timer-container{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+        .timer-label{color:rgba(255,255,255,0.8);font-size:14px}
+        .timer-bar{flex:1;height:8px;background:rgba(255,255,255,0.15);border-radius:4px;overflow:hidden}
+        .timer-fill{height:100%;background:linear-gradient(90deg, #4caf50, #45a049);width:100%;transition:width 0.1s linear, background 0.2s}
+        .timer-fill.yellow{background:linear-gradient(90deg, #ffc107, #ffb300)}
+        .timer-fill.red{background:linear-gradient(90deg, #ff5c7c, #ff3b63)}
+        .timer-time{color:rgba(255,255,255,0.9);font-size:14px;font-weight:bold;min-width:30px;text-align:right}
+        .choices{display:grid;grid-template-columns:1fr;gap:12px}
+        @media(min-width:560px){.choices{grid-template-columns:1fr 1fr}}
+        button.choice{background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(0,0,0,0.02));border:0;padding:14px;border-radius:12px;color:white;font-size:16px;cursor:pointer;transition:transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(255,255,255,0.1);position:relative;overflow:hidden}
+        button.choice::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);opacity:0;transition:opacity 0.3s ease}
+        button.choice:hover::before{opacity:1;animation:shimmer 0.6s ease-in-out}
+        button.choice:hover:not(.disabled){box-shadow:0 0 30px rgba(255,255,255,0.2);transform:translateY(-1px)}
+        button.choice:active{transform:translateY(2px)}
+        button.choice.disabled{opacity:0.75;pointer-events:none}
+        .feedback{height:36px;margin-top:12px;display:flex;align-items:center;gap:8px}
+        .feedback .text{padding:6px 10px;border-radius:999px;color:white;font-weight:700}
+        .feedback .correct{background:var(--correct)}
+        .feedback .wrong{background:var(--wrong)}
+        .progress{margin-top:12px;color:rgba(255,255,255,0.85);font-size:14px}
+        .final{display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px}
+        .final.show{display:flex}
+        .final-message{font-size:22px;color:white;text-align:center;max-width:300px}
+        .final-score{font-size:56px;text-align:center}
+        .final-score span{font-size:32px;color:rgba(255,255,255,0.8)}
+        .btn-action{background:linear-gradient(135deg, var(--accent), var(--accent-2));border:0;padding:12px 24px;border-radius:12px;color:white;cursor:pointer;font-family:'Comfortaa';font-size:16px;font-weight:700;transition:all 0.2s;box-shadow:0 4px 15px rgba(255,105,180,0.4);position:relative}
+        .btn-action:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,105,180,0.5)}
+        .btn-difficulty {
+            background: linear-gradient(135deg, #ffb6d9, #ff69b4);
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(255,105,180,0.3);
+        }
+        .btn-difficulty:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(255,105,180,0.5);
+        }
+        .btn-difficulty.easy { background: linear-gradient(135deg, #90ee90, #66bb6a); }
+        .btn-difficulty.medium { background: linear-gradient(135deg, #ffb347, #ff9f43); }
+        .btn-difficulty.hard { background: linear-gradient(135deg, #ff7b7b, #ff5c5c); }
+        .footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;color:rgba(255,255,255,0.9);font-size:13px}
+        .choice.correct{outline:3px solid rgba(76,175,80,0.12);box-shadow:0 8px 30px rgba(76,175,80,0.12)}
+        .choice.wrong{outline:3px solid rgba(255,92,124,0.12);box-shadow:0 8px 30px rgba(255,92,124,0.08)}
+        canvas#confetti{position:fixed;left:0;top:0;pointer-events:none;z-index:9999}
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header>
+            <div class="title rainbow-text" id="mainTitle">Answer Wajiha!!</div>
+            <div class="header-info" id="headerInfo" style="display:none">
+                <div class="score-badge">Score: <span id="score">0</span></div>
+                <div class="difficulty-badge" id="difficultyBadge"></div>
+            </div>
+            <div class="player-name-display" id="playerDisplay" style="display:none"></div>
+        </header>
+
+        <div class="card">
+            <!-- NAME ENTRY SCREEN -->
+            <div id="nameScreen" class="start-screen">
+                <div class="start-title rainbow-text">Answer Wajiha!!</div>
+                <div class="start-subtitle">Welcome! What's your name, superstar?</div>
+                <input type="text" id="playerNameInput" class="name-input" placeholder="What's your name, superstar?" />
+                <button class="btn-action" id="continueBtn" onclick="continueToDifficulty()">Continue</button>
+            </div>
+
+            <!-- DIFFICULTY SCREEN -->
+            <div id="startScreen" class="start-screen" style="display:none">
+                <div class="start-title rainbow-text">Choose Your Level</div>
+                <div class="start-subtitle">Ready to test your knowledge?</div>
+                <div class="difficulty-buttons">
+                    <button class="btn-difficulty easy" id="btnEasy">Easy</button>
+                    <button class="btn-difficulty medium" id="btnMedium">Medium</button>
+                    <button class="btn-difficulty hard" id="btnHard">Hard</button>
+                </div>
+                <button class="btn-action" id="leaderboardBtn" style="margin-top:16px;background:rgba(255,255,255,0.12)">Leaderboard</button>
+            </div>
+
+            <!-- LEADERBOARD SCREEN -->
+            <div id="leaderboardScreen" class="start-screen" style="display:none">
+                <div class="start-title rainbow-text">🏆 Leaderboard</div>
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Score</th>
+                            <th>Level</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody">
+                        <tr><td colspan="5" style="text-align:center;color:rgba(255,255,255,0.7)">No scores yet. Play a game!</td></tr>
+                    </tbody>
+                </table>
+                <div style="display:flex;gap:12px;margin-top:20px;justify-content:center;">
+                    <button class="btn-action" id="backToMenuBtn">Back to Menu</button>
+                    <button class="btn-action" id="clearScoresBtn" style="background:linear-gradient(135deg, #ff6b6b, #ff5252)">Clear Scores</button>
+                </div>
+            </div>
+
+            <!-- QUIZ SCREEN -->
+            <div id="quiz" style="display:none">
+                <div class="timer-container">
+                    <span class="timer-label">Time:</span>
+                    <div class="timer-bar">
+                        <div class="timer-fill" id="timerFill"></div>
+                    </div>
+                    <div class="timer-time" id="timerTime">15s</div>
+                </div>
+                <div class="question" id="question">Loading...</div>
+                <div class="reaction-message" id="reactionMessage"></div>
+                <div class="choices" id="choices"></div>
+                <div class="feedback" id="feedback" aria-live="polite"></div>
+                <div class="progress" id="progress">Question 0 / 0</div>
+            </div>
+
+            <!-- FINAL SCREEN -->
+            <div class="final" id="final">
+                <div class="start-title rainbow-text">Quiz Complete!</div>
+                <div class="final-message" id="finalMessage"></div>
+                <div class="final-score"><span id="final-score">0</span> <span>/ 15</span></div>
+                <button class="btn-action" id="restart">Play Again</button>
+                <button class="btn-action" id="viewLeaderboard" style="background:rgba(255,255,255,0.12);margin-top:8px">View Leaderboard</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div>Made with sprinkles ✨</div>
+            <div style="opacity:0.9">Have fun!</div>
+        </div>
+    </div>
+
+    <canvas id="confetti"></canvas>
+
+    <script>
+        // QUESTION SETS BY DIFFICULTY - Randomized with fun topics!
+        const questionSets = {
+            easy: [
+                // Beauty & Fashion
+                {q: 'What luxury brand is famous for its red-soled high heels?', choices:['Prada','Christian Louboutin','Gucci','Versace'], a:1},
+                {q: 'Which fashion brand features the iconic interlocking CC logo?', choices:['Gucci','Versace','Chanel','Prada'], a:2},
+                {q: 'What supermodel was nicknamed "The Body"?', choices:['Naomi Campbell','Cindy Crawford','Tyra Banks','Gigi Hadid'], a:1},
+                {q: 'Which makeup brand is known for its white bottle packaging?', choices:['MAC','Estée Lauder','NARS','Charlotte Tilbury'], a:0},
+                {q: 'What year did Victoria\'s Secret hold its first fashion show?', choices:['1990','1995','2000','2005'], a:1},
+                // Travel & Countries
+                {q: 'What is the capital of Japan?', choices:['Osaka','Kyoto','Tokyo','Yokohama'], a:2},
+                {q: 'The Statue of Liberty is located in which U.S. state?', choices:['New Jersey','Connecticut','New York','Massachusetts'], a:2},
+                {q: 'Which country is home to the Great Wall?', choices:['Japan','India','China','Vietnam'], a:2},
+                {q: 'What is the capital of Australia?', choices:['Sydney','Melbourne','Brisbane','Canberra'], a:3},
+                {q: 'The Eiffel Tower is located in which city?', choices:['London','Berlin','Paris','Amsterdam'], a:2},
+                // Hollywood Gossip
+                {q: 'Which actor plays Iron Man in the MCU?', choices:['Tom Hardy','Robert Downey Jr.','Chris Evans','Mark Ruffalo'], a:1},
+                {q: 'In which movie did the famous "Here\'s looking at you, kid" line appear?', choices:['Citizen Kane','Casablanca','Vertigo','Sunset Boulevard'], a:1},
+                {q: 'What celebrity couple was nicknamed "Brangelina"?', choices:['Johnny Depp & Amber Heard','Brad Pitt & Angelina Jolie','Tom Cruise & Katie Holmes','Will Smith & Jada Pinkett'], a:1},
+                {q: 'Which actress won the Oscar for Best Actress in 2024?', choices:['Margot Robbie','Emma Stone','Carey Mulligan','Lily James'], a:1},
+                {q: 'What is the most-watched movie of all time?', choices:['Titanic','Avatar','Avengers: Endgame','Avatar: The Way of Water'], a:3}
+            ],
+            medium: [
+                // Beauty & Fashion
+                {q: 'Which designer is credited with creating the Little Black Dress?', choices:['Elsa Schiaparelli','Coco Chanel','Cristóbal Balenciaga','Yves Saint Laurent'], a:1},
+                {q: 'Which city is considered the fashion capital of the world?', choices:['Milan','New York','London','Paris'], a:3},
+                {q: 'Which luxury brand is known for its interlocking GG logo?', choices:['Versace','Hermès','Gucci','Louis Vuitton'], a:2},
+                {q: 'What decade marked the beginning of the "Supermodel era"?', choices:['1980s','1990s','2000s','1970s'], a:1},
+                {q: 'Which designer created the iconic Birkin bag?', choices:['Chanel','Louis Vuitton','Hermès','Prada'], a:2},
+                {q: 'Which beauty product company was founded by Estée Lauder?', choices:['MAC','Clinique','Bobbi Brown','All of the above'], a:3},
+                // Travel & Countries
+                {q: 'How many colors are on the German flag?', choices:['2','3','4','5'], a:1},
+                {q: 'What is the currency of Thailand?', choices:['Baht','Ringgit','Rupee','Dong'], a:0},
+                {q: 'Which country has the most UNESCO World Heritage Sites?', choices:['France','China','Japan','Italy'], a:3},
+                {q: 'What is the capital of New Zealand?', choices:['Auckland','Christchurch','Wellington','Dunedin'], a:2},
+                {q: 'Which country is the world\'s largest by area?', choices:['Canada','China','United States','Russia'], a:3},
+                {q: 'Which country is famous for its tulips and windmills?', choices:['Belgium','Germany','Netherlands','Switzerland'], a:2},
+                // Hollywood Gossip
+                {q: 'Which film holds the record for highest box office earnings?', choices:['Avatar','Avatar: The Way of Water','Avengers: Endgame','Titanic'], a:1},
+                {q: 'How many Academy Awards has Meryl Streep been nominated for?', choices:['19','21','23','25'], a:2},
+                {q: 'Which actor played the most superhero movie roles?', choices:['Chris Evans','Tom Holland','Robert Downey Jr.','Stan Lee'], a:2},
+                {q: 'What is the highest-grossing animated film of all time?', choices:['Frozen II','Lion King','Inside Out 2','Toy Story 4'], a:2},
+                {q: 'Which actor has won the most Academy Awards?', choices:['Marlon Brando','Laurence Olivier','Jack Nicholson','Cary Grant'], a:0}
+            ],
+            hard: [
+                // Beauty & Fashion
+                {q: 'In what year did Coco Chanel open her first boutique?', choices:['1908','1910','1912','1915'], a:1},
+                {q: 'Which fashion week is traditionally considered the most prestigious?', choices:['New York','Milan','London','Paris'], a:3},
+                {q: 'What does "haute couture" literally translate to in English?', choices:['Expensive clothes','High sewing','Fashion art','Designer wear'], a:1},
+                {q: 'Which designer\'s house created the Kelly Bag?', choices:['Louis Vuitton','Gucci','Chanel','Hermès'], a:3},
+                {q: 'In what year was the first-ever Fashion Week held?', choices:['1905','1910','1925','1935'], a:1},
+                {q: 'Which fashion icon wore the dress that sold for $4.6 million at auction?', choices:['Audrey Hepburn','Marilyn Monroe','Grace Kelly','Jacqueline Kennedy'], a:1},
+                {q: 'What is the term for fashion items from previous seasons still considered trendy?', choices:['Vintage','Retro','Preloved','Timeless'], a:0},
+                // Travel & Countries
+                {q: 'Which country has four official languages?', choices:['Belgium','Switzerland','India','Canada'], a:1},
+                {q: 'What is the smallest independent country in the world?', choices:['Monaco','Liechtenstein','San Marino','Vatican City'], a:3},
+                {q: 'Which country has the only non-rectangular flag?', choices:['Switzerland','Bhutan','Nepal','Vatican City'], a:2},
+                {q: 'What is the highest mountain peak on Earth by elevation above sea level?', choices:['K2','Kangchenjunga','Everest','Lhotse'], a:2},
+                {q: 'Which country has the most islands of any nation?', choices:['Indonesia','Philippines','Norway','Sweden'], a:3},
+                {q: 'What is the world\'s longest river by length?', choices:['Amazon','Yangtze','Mississippi-Missouri','Nile'], a:3},
+                // Hollywood Gossip
+                {q: 'What was the first feature-length animated film ever made?', choices:['Pinocchio','Sleeping Beauty','Snow White and the Seven Dwarfs','Fantasia'], a:2},
+                {q: 'How many Academy Awards did "Titanic" win?', choices:['9','10','11','12'], a:2},
+                {q: 'Which studio is the oldest operating film studio in the world?', choices:['MGM','Paramount','Warner Bros','Gaumont'], a:3},
+                {q: 'In what year was the Academy Awards ceremony first held?', choices:['1925','1927','1929','1931'], a:2},
+                {q: 'Which actor portrayed Forrest Gump in the 1994 film?', choices:['Kevin Bacon','Tom Hanks','Gary Sinise','Michael Haley'], a:1}
+            ]
+        };
+
+        // CONFIG BY DIFFICULTY
+        const difficultyConfig = {
+            easy: { timePerQuestion: 20, total: 15 },
+            medium: { timePerQuestion: 15, total: 15 },
+            hard: { timePerQuestion: 10, total: 15 }
+        };
+
+        // HELPER: Shuffle array in place
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // HELPER: Randomize answer choices and track correct index
+        function randomizeQuestion(q) {
+            const correctAnswer = q.choices[q.a];
+            const choicesCopy = [...q.choices];
+            shuffleArray(choicesCopy);
+            return {
+                q: q.q,
+                choices: choicesCopy,
+                a: choicesCopy.indexOf(correctAnswer)
+            };
+        }
+
+        // STATE
+        let current = 0;
+        let score = 0;
+        let questions = [];
+        let timePerQuestion = 0;
+        let totalQuestions = 0;
+        let difficulty = '';
+        let timerInterval = null;
+        let timeRemaining = 0;
+        let isAnswered = false;
+        let playerName = '';
+
+        // REACTION MESSAGES
+        const correctReactions = [
+            "OMG you're too smart!! 🧠✨",
+            "Serving BRAINS today!! 💅",
+            "Main character energy right there!! 🌟",
+            "Okay genius, we see you!! 👏",
+            "Slay!! That was perfect!! 💖",
+            "You ate that up!! 🍽️",
+            "Mother is mothering!! 👑",
+            "Not you being a whole encyclopedia!! 📚",
+            "The way you just ATE that!! 💫",
+            "Bestie you're on FIRE!! 🔥"
+        ];
+
+        const wrongReactions = [
+            "Girl... no 💀",
+            "That was NOT it bestie 😭",
+            "The answer said byeee 👋",
+            "Oof... we don't claim that answer 🫣",
+            "Even Google is judging you rn 😂",
+            "Ma'am this is embarrassing 🙈",
+            "You really said that with your whole chest?? 💀",
+            "Delulu is NOT the solulu here 😩",
+            "The wrong answer speedrun champion!! 🏃‍♀️",
+            "Tell me you guessed without telling me 🤡"
+        ];
+
+        // DOM ELEMENTS
+        const nameScreen = document.getElementById('nameScreen');
+        const playerNameInput = document.getElementById('playerNameInput');
+        const continueBtn = document.getElementById('continueBtn');
+        const startScreen = document.getElementById('startScreen');
+        const leaderboardScreen = document.getElementById('leaderboardScreen');
+        const leaderboardBody = document.getElementById('leaderboardBody');
+        const leaderboardBtn = document.getElementById('leaderboardBtn');
+        const backToMenuBtn = document.getElementById('backToMenuBtn');
+        const clearScoresBtn = document.getElementById('clearScoresBtn');
+        const viewLeaderboard = document.getElementById('viewLeaderboard');
+        const quizEl = document.getElementById('quiz');
+        const finalEl = document.getElementById('final');
+        const questionEl = document.getElementById('question');
+        const reactionMessageEl = document.getElementById('reactionMessage');
+        const choicesEl = document.getElementById('choices');
+        const feedbackEl = document.getElementById('feedback');
+        const progressEl = document.getElementById('progress');
+        const scoreEl = document.getElementById('score');
+        const finalScoreEl = document.getElementById('final-score');
+        const finalMessage = document.getElementById('finalMessage');
+        const restartBtn = document.getElementById('restart');
+        const timerFill = document.getElementById('timerFill');
+        const timerTime = document.getElementById('timerTime');
+        const difficultyBadge = document.getElementById('difficultyBadge');
+        const playerDisplay = document.getElementById('playerDisplay');
+        const headerInfo = document.getElementById('headerInfo');
+        const btnEasy = document.getElementById('btnEasy');
+        const btnMedium = document.getElementById('btnMedium');
+        const btnHard = document.getElementById('btnHard');
+
+        // NAME ENTRY
+        continueBtn.addEventListener('click', continueToDifficulty);
+        playerNameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') continueToDifficulty();
+        });
+
+        function continueToDifficulty() {
+            playerName = playerNameInput.value.trim();
+            if (!playerName) {
+                alert('Please enter your name, superstar! ✨');
+                return;
+            }
+            nameScreen.style.display = 'none';
+            startScreen.style.display = 'flex';
+            playerNameInput.value = '';
+        }
+
+        // DIFFICULTY SELECTION
+        btnEasy.addEventListener('click', () => startGame('easy'));
+        btnMedium.addEventListener('click', () => startGame('medium'));
+        btnHard.addEventListener('click', () => startGame('hard'));
+
+        // LEADERBOARD
+        leaderboardBtn.addEventListener('click', showLeaderboard);
+        backToMenuBtn.addEventListener('click', backToMenu);
+        clearScoresBtn.addEventListener('click', clearScores);
+        viewLeaderboard.addEventListener('click', showLeaderboard);
+        restartBtn.addEventListener('click', backToMenu);
+
+        function showLeaderboard() {
+            const scores = loadScores();
+            leaderboardBody.innerHTML = '';
+
+            if (scores.length === 0) {
+                leaderboardBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:rgba(255,255,255,0.7)">No scores yet. Play a game!</td></tr>';
+            } else {
+                scores.forEach((score, idx) => {
+                    const row = document.createElement('tr');
+                    const crown = idx === 0 ? '👑' : idx + 1;
+                    row.innerHTML = `
+                        <td><span class="rank-badge">${crown}</span></td>
+                        <td>${score.name}</td>
+                        <td>${score.score}</td>
+                        <td>${score.difficulty.toUpperCase()}</td>
+                        <td>${score.date}</td>
+                    `;
+                    leaderboardBody.appendChild(row);
+                });
+            }
+
+            quizEl.style.display = 'none';
+            finalEl.classList.remove('show');
+            startScreen.style.display = 'none';
+            leaderboardScreen.style.display = 'flex';
+        }
+
+        function backToMenu() {
+            leaderboardScreen.style.display = 'none';
+            startScreen.style.display = 'flex';
+            nameScreen.style.display = 'none';
+            quizEl.style.display = 'none';
+            finalEl.classList.remove('show');
+            headerInfo.style.display = 'none';
+            playerDisplay.style.display = 'none';
+        }
+
+        function clearScores() {
+            if (confirm('Are you sure you want to clear all scores?')) {
+                localStorage.removeItem('triviaScores');
+                showLeaderboard();
+            }
+        }
+
+        // LEADERBOARD STORAGE
+        function saveScore(playerName, score, difficulty) {
+            const scores = loadScores();
+            const today = new Date().toLocaleDateString();
+            scores.push({ name: playerName, score: score, difficulty: difficulty, date: today });
+            scores.sort((a, b) => b.score - a.score);
+            scores.splice(20); // Keep only top 20
+            localStorage.setItem('triviaScores', JSON.stringify(scores));
+        }
+
+        function loadScores() {
+            const stored = localStorage.getItem('triviaScores');
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        // REACTIONS
+        function getRandomReaction(isCorrect) {
+            const reactions = isCorrect ? correctReactions : wrongReactions;
+            return reactions[Math.floor(Math.random() * reactions.length)];
+        }
+
+        function showReaction(isCorrect) {
+            const reaction = getRandomReaction(isCorrect);
+            reactionMessageEl.textContent = reaction;
+            reactionMessageEl.className = 'reaction-message ' + (isCorrect ? 'correct' : 'wrong');
+            setTimeout(() => {
+                reactionMessageEl.textContent = '';
+                reactionMessageEl.className = 'reaction-message';
+            }, 2000);
+        }
+
+        function startGame(diff) {
+            difficulty = diff;
+            const config = difficultyConfig[diff];
+            timePerQuestion = config.timePerQuestion;
+            totalQuestions = config.total;
+            
+            // Shuffle and randomize question set
+            questions = [...questionSets[diff]]
+                .map(q => randomizeQuestion(q))
+                .sort(() => Math.random() - 0.5);
+            
+            current = 0;
+            score = 0;
+            scoreEl.textContent = score;
+
+            // Trigger sparkle burst
+            createSparkleburst(event.target);
+
+            nameScreen.style.display = 'none';
+            startScreen.style.display = 'none';
+            quizEl.style.display = 'block';
+            finalEl.classList.remove('show');
+            headerInfo.style.display = 'flex';
+            playerDisplay.style.display = 'block';
+            playerDisplay.textContent = `Go ${playerName}! 🌟`;
+            difficultyBadge.textContent = diff.toUpperCase();
+            document.querySelector('.final-score span:last-child').textContent = `/ ${totalQuestions}`;
+
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (current >= totalQuestions) {
+                finishQuiz();
+                return;
+            }
+
+            clearTimer();
+            isAnswered = false;
+            const item = questions[current];
+            questionEl.textContent = item.q;
+            choicesEl.innerHTML = '';
+            feedbackEl.innerHTML = '';
+            progressEl.textContent = `Question ${current + 1} / ${totalQuestions}`;
+
+            item.choices.forEach((c, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'choice';
+                btn.type = 'button';
+                btn.textContent = c;
+                btn.dataset.index = i;
+                btn.addEventListener('click', () => handleAnswer(btn, i));
+                choicesEl.appendChild(btn);
+            });
+
+            startTimer();
+        }
+
+        function startTimer() {
+            timeRemaining = timePerQuestion;
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+
+                if (timeRemaining <= 0) {
+                    clearTimer();
+                    if (!isAnswered) {
+                        timeoutAnswer();
+                    }
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            timerTime.textContent = timeRemaining + 's';
+            const percent = (timeRemaining / timePerQuestion) * 100;
+            timerFill.style.width = percent + '%';
+
+            // Color changes: green → yellow (at 5s) → red (at 2.5s)
+            timerFill.classList.remove('yellow', 'red');
+            if (timeRemaining <= 2.5) {
+                timerFill.classList.add('red');
+            } else if (timeRemaining <= 5) {
+                timerFill.classList.add('yellow');
+                if (timeRemaining === 5 || timeRemaining === 4 || timeRemaining === 3) {
+                    playTickSound();
+                }
+            }
+        }
+
+        function clearTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function handleAnswer(btn, idx) {
+            if (isAnswered) return;
+            isAnswered = true;
+            clearTimer();
+
+            document.querySelectorAll('.choice').forEach(b => b.classList.add('disabled'));
+            const correctIdx = questions[current].a;
+
+            if (idx === correctIdx) {
+                btn.classList.add('correct');
+                score++;
+                scoreEl.textContent = score;
+                feedbackEl.innerHTML = `<div class="text correct">✓ Correct!</div>`;
+                showReaction(true);
+                playCorrectSound();
+                shootConfetti();
+            } else {
+                btn.classList.add('wrong');
+                feedbackEl.innerHTML = `<div class="text wrong">✗ Wrong — ${questions[current].choices[correctIdx]}</div>`;
+                showReaction(false);
+                playWrongSound();
+                const correctBtn = [...document.querySelectorAll('.choice')].find(b => b.dataset.index == correctIdx);
+                if (correctBtn) correctBtn.classList.add('correct');
+            }
+
+            setTimeout(() => {
+                current++;
+                showQuestion();
+            }, 1400);
+        }
+
+        function timeoutAnswer() {
+            isAnswered = true;
+            document.querySelectorAll('.choice').forEach(b => b.classList.add('disabled'));
+            const correctIdx = questions[current].a;
+            feedbackEl.innerHTML = `<div class="text wrong">⏱ Time's up! Correct: ${questions[current].choices[correctIdx]}</div>`;
+            playWrongSound();
+            const correctBtn = [...document.querySelectorAll('.choice')].find(b => b.dataset.index == correctIdx);
+            if (correctBtn) correctBtn.classList.add('correct');
+
+            setTimeout(() => {
+                current++;
+                showQuestion();
+            }, 1400);
+        }
+
+        function finishQuiz() {
+            clearTimer();
+            quizEl.style.display = 'none';
+            finalEl.classList.add('show');
+            finalScoreEl.textContent = score;
+
+            const percentage = (score / totalQuestions) * 100;
+            let message = '';
+
+            if (percentage === 100) {
+                message = `🎉 Perfect, ${playerName}! You're a trivia master!`;
+            } else if (percentage >= 80) {
+                message = `🌟 Excellent work, ${playerName}! You're super smart!`;
+            } else if (percentage >= 60) {
+                message = `👏 Good job, ${playerName}! Keep playing!`;
+            } else if (percentage >= 40) {
+                message = `💪 Nice try, ${playerName}! Practice makes perfect!`;
+            } else {
+                message = `🎯 Don't give up, ${playerName}! Try again!`;
+            }
+
+            finalMessage.textContent = message;
+            
+            // Save score to leaderboard
+            saveScore(playerName, score, difficulty);
+            
+            setTimeout(() => {
+                shootConfetti(80);
+            }, 200);
+        }
+
+        // ========== WEB AUDIO API SOUNDS ==========
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playCorrectSound() {
+            const now = audioContext.currentTime;
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+
+            osc.frequency.setValueAtTime(523.25, now); // C5
+            osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+            osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+
+            osc.start(now);
+            osc.stop(now + 0.3);
+        }
+
+        function playWrongSound() {
+            const now = audioContext.currentTime;
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+
+            osc.frequency.setValueAtTime(300, now);
+            osc.frequency.setValueAtTime(200, now + 0.1);
+
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+
+            osc.start(now);
+            osc.stop(now + 0.3);
+        }
+
+        function playTickSound() {
+            const now = audioContext.currentTime;
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+
+            osc.frequency.setValueAtTime(800, now);
+            gain.gain.setValueAtTime(0.1, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+
+            osc.start(now);
+            osc.stop(now + 0.05);
+        }
+
+        // ========== SPARKLE BURST ==========
+        function createSparkleburst(element) {
+            if (!element) return;
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const sparkleCount = 20;
+
+            for (let i = 0; i < sparkleCount; i++) {
+                const angle = (i / sparkleCount) * Math.PI * 2 + (Math.random() * 0.5);
+                const distance = 80 + Math.random() * 60;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+
+                const sparkle = document.createElement('div');
+                sparkle.style.position = 'fixed';
+                sparkle.style.left = centerX + 'px';
+                sparkle.style.top = centerY + 'px';
+                sparkle.style.width = '8px';
+                sparkle.style.height = '8px';
+                const colors = ['#ffb6d9', '#ff69b4', '#ffadf0', '#ffc4e0', '#ff85d0', '#ffcf6f', '#ffb6d9'];
+                sparkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                sparkle.style.borderRadius = '50%';
+                sparkle.style.pointerEvents = 'none';
+                sparkle.style.zIndex = '9998';
+                sparkle.style.boxShadow = `0 0 12px ${colors[Math.floor(Math.random() * colors.length)]}`;
+                sparkle.style.setProperty('--tx', tx + 'px');
+                sparkle.style.setProperty('--ty', ty + 'px');
+                sparkle.style.animation = `sparkle-burst 1s ease-out forwards`;
+
+                document.body.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 1000);
+            }
+        }
+
+        // ========== CONFETTI ==========
+        const canvas = document.getElementById('confetti');
+        const ctx = canvas.getContext('2d');
+        let W = canvas.width = innerWidth;
+        let H = canvas.height = innerHeight;
+
+        window.addEventListener('resize', () => {
+            W = canvas.width = innerWidth;
+            H = canvas.height = innerHeight;
+        });
+
+        let particles = [];
+
+        function rand(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function shootConfetti(count = 40) {
+            const colors = ['#ff6fb5', '#ffd7e8', '#7b2cff', '#ffadf0', '#ffcf6f', '#bda1ff'];
+            // On bigger celebrations (count > 60), use larger particles
+            const isBigCelebration = count > 60;
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: rand(W * 0.2, W * 0.8),
+                    y: rand(H * 0.1, H * 0.4),
+                    vx: rand(-8, 8),
+                    vy: rand(-12, -3),
+                    size: isBigCelebration ? Math.floor(rand(14, 28)) : Math.floor(rand(8, 16)),
+                    color: colors[Math.floor(rand(0, colors.length))],
+                    rot: rand(0, 360),
+                    rotVel: rand(-10, 10),
+                    drag: isBigCelebration ? 0.985 : 0.99,
+                    life: isBigCelebration ? rand(100, 180) : rand(60, 140),
+                    maxLife: isBigCelebration ? rand(100, 180) : rand(60, 140)
+                });
+            }
+            if (!animating) {
+                animating = true;
+                render();
+            }
+        }
+
+        let animating = false;
+
+        function render() {
+            ctx.clearRect(0, 0, W, H);
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.vy += 0.35;
+                p.vx *= p.drag;
+                p.x += p.vx;
+                p.y += p.vy;
+                p.rot += p.rotVel || 0;
+                p.life--;
+
+                // Add glow effect to confetti
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rot * Math.PI / 180);
+                ctx.shadowColor = p.color;
+                ctx.shadowBlur = 8;
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+                ctx.restore();
+
+                if (p.life <= 0 || p.y > H + 50 || p.x < -50 || p.x > W + 50) {
+                    particles.splice(i, 1);
+                }
+            }
+            if (particles.length > 0) {
+                requestAnimationFrame(render);
+            } else {
+                animating = false;
+            }
+        }
+    </script>
+</body>
+</html>
